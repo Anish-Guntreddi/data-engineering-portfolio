@@ -4,263 +4,250 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Green Gates — Data Engineering Portfolio · Anish Guntreddi</title>
-<meta name="description" content="Three production-shaped data-engineering systems — WarehouseLab (orchestrated dbt ELT), StreamPulse (real-time streaming analytics), and DataGuard (data-quality monitoring). Each runs from a clean clone and proves itself with green verification gates." />
+<meta name="description" content="A typeset journal of three production-shaped data-engineering systems — WarehouseLab (orchestrated dbt ELT), StreamPulse (real-time streaming analytics), and DataGuard (data-quality monitoring). Each runs from a clean clone and proves itself with verified gates." />
 <meta name="author" content="Anish Guntreddi" />
+<meta name="theme-color" content="#f2ecde" />
 <meta property="og:title" content="Green Gates — Data Engineering Portfolio" />
-<meta property="og:description" content="Reproducible, tested data pipelines: orchestrated ELT, real-time streaming, and data-quality monitoring. Gates decide done." />
+<meta property="og:description" content="Three reproducible, tested data pipelines — orchestrated ELT, real-time streaming, and data-quality monitoring. The gates decide done." />
 <meta property="og:type" content="website" />
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="stylesheet" href="assets/styles.css" />
 <script>document.documentElement.className += ' js';</script>
 </head>
 <body>
-<div class="bg"></div>
 <div class="grain"></div>
+<div class="vignette"></div>
 
 <!-- ===================== NAV ===================== -->
-<nav class="nav">
-  <div class="nav-inner">
-    <a class="brand" href="#top"><span class="dot"></span> green&nbsp;gates</a>
-    <div class="nav-links">
-      <a href="#projects">projects</a>
-      <a href="#stack">stack</a>
-      <a href="#loop">method</a>
-      <a class="nav-cta" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio" target="_blank" rel="noopener">GitHub ↗</a>
-    </div>
+<div class="topnav">
+  <div class="wrap topnav-inner">
+    <a class="mark" href="#top"><span class="tick">✦</span> Green&nbsp;Gates</a>
+    <nav>
+      <a class="lnk-hide" href="#systems">Systems</a>
+      <a class="lnk-hide" href="#stack">Stack</a>
+      <a class="lnk-hide" href="#method">Method</a>
+      <a class="cta" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
   </div>
-</nav>
+</div>
 
-<!-- ===================== HERO ===================== -->
-<header id="top" class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <span class="status-pill reveal"><span class="led"></span> ALL VERIFICATION GATES GREEN</span>
-      <h1 class="reveal" data-d="1">Pipelines that<br><span class="flow">prove themselves.</span></h1>
-      <p class="lead reveal" data-d="2">A data-engineering portfolio of three systems — orchestrated batch&nbsp;ELT, real-time streaming, and data-quality monitoring. Each one runs from a clean clone with a single command and is declared <em style="color:var(--green);font-style:normal">done</em> only when its automated gates turn green.</p>
-      <div class="hero-actions reveal" data-d="3">
-        <a class="btn btn-primary" href="#projects">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Explore the systems
-        </a>
-        <a class="btn" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.36 9.36 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.78-4.57 5.04.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg>
-          Read the code
-        </a>
-      </div>
-      <div class="hero-stats reveal" data-d="4">
-        <div class="stat"><div class="n">3</div><div class="l">Systems</div></div>
-        <div class="stat"><div class="n">12</div><div class="l">Green gates</div></div>
-        <div class="stat"><div class="n">100%</div><div class="l">Reproducible</div></div>
-        <div class="stat"><div class="n">1</div><div class="l">Command each</div></div>
-      </div>
+<!-- ===================== MASTHEAD ===================== -->
+<header id="top" class="masthead">
+  <div class="wrap">
+    <div class="edition-rule"></div>
+    <div class="masthead-top">
+      <span>Vol. 01 — Data Engineering</span>
+      <span>Reproducible · Tested · Orchestrated</span>
+      <span>Est. 2026</span>
     </div>
-
-    <!-- live terminal -->
-    <div class="terminal reveal" data-d="2" aria-hidden="true">
-      <div class="terminal-bar">
-        <span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>
-        <span class="ttitle">warehouselab — make run</span>
-      </div>
-      <div class="terminal-body" id="term"></div>
+    <h1 class="masthead-title">Green&nbsp;Gates</h1>
+    <p class="masthead-sub">A field journal of pipelines that prove themselves.</p>
+    <div class="masthead-meta">
+      <span>Three systems</span>
+      <span><b>71</b> unit tests green</span>
+      <span>Full e2e <b>verified</b></span>
+      <span>One command each</span>
     </div>
   </div>
 </header>
 
-<!-- ===================== STRIP ===================== -->
-<div class="strip" aria-hidden="true">
-  <div class="marq" id="marq"></div>
-</div>
-
-<!-- ===================== CONCEPT / THESIS ===================== -->
-<section id="concept">
-  <div class="wrap">
-    <span class="eyebrow reveal">The thesis</span>
-    <h2 class="h-sec reveal" data-d="1">The boring, critical work that<br>production data teams live on.</h2>
-    <p class="lead reveal" data-d="2">No dashboards-on-a-toy-dataset here. These projects demonstrate the reliability engineering data platforms actually depend on: tested transformations, orchestration, contracts, freshness and drift checks, and streaming aggregation — all reproducible from an empty state.</p>
-    <div class="thesis-grid">
-      <div class="tcard reveal" data-d="1">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h10" stroke-linecap="round"/></svg></div>
-        <h3>Reproducible by construction</h3>
-        <p>Every pipeline seeds its own deterministic synthetic data and runs end-to-end with one command. No hidden state, no “works on my machine.”</p>
-      </div>
-      <div class="tcard reveal" data-d="2">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7l7-4Z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <h3>Verified, not vibes</h3>
-        <p>Golden-value assertions, dbt tests, exact windowed aggregates, and dual-direction drift checks. The gates are the definition of done.</p>
-      </div>
-      <div class="tcard reveal" data-d="3">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <h3>One Postgres-centered spine</h3>
-        <p>Shared local stack — Postgres, Docker Compose, Python — across batch ELT, streaming, and quality monitoring. Different modes, one toolbox.</p>
+<main>
+<!-- ===================== LEDE ===================== -->
+<section class="lede wrap">
+  <div class="lede-grid">
+    <div>
+      <p class="kicker reveal">The thesis</p>
+      <h2 class="headline reveal" data-d="1">The boring, critical work that production data teams <em>live on.</em></h2>
+      <p class="deck reveal" data-d="2"><span class="dropcap">N</span>o dashboards on a toy dataset. Three systems — orchestrated batch ELT, real-time streaming, and data-quality monitoring — each seeding its own deterministic data and running end to end from an empty state. A project is declared done only when its automated gates are <em style="color:var(--pine);font-style:normal;font-weight:600">verified</em>, not when the code merely looks right.</p>
+      <p class="byline reveal" data-d="3">Words &amp; code — Anish Guntreddi · Postgres-centered local stack</p>
+      <div class="lede-actions reveal" data-d="3">
+        <a class="btn btn-fill" href="#systems">
+          Read the systems
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.1.68-.22.68-.49v-1.7c-2.78.6-3.37-1.4-3.37-1.4-.45-1.17-1.11-1.48-1.11-1.48-.91-.64.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.36 9.36 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.78-4.57 5.04.36.32.68.94.68 1.9v2.81c0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg>
+          The code
+        </a>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ===================== PROJECTS ===================== -->
-<section id="projects">
-  <div class="wrap">
-    <span class="eyebrow reveal">The systems · 01–03</span>
-    <h2 class="h-sec reveal" data-d="1">Three pipelines, three modes of failure tamed.</h2>
-    <p class="lead reveal" data-d="2" style="margin-bottom:2.6rem">Batch, streaming, and quality. Each card shows the architecture, the stack, and the live verification gates that gate “done.”</p>
-
-    <div class="proj">
-
-      <!-- WAREHOUSELAB -->
-      <article class="card reveal" style="--hue:var(--warehouse)">
-        <div class="card-inner">
-          <div>
-            <div class="card-index">01 · BATCH ELT</div>
-            <h3>WarehouseLab</h3>
-            <div class="tag">Raw events → analytics-ready marts via an orchestrated, tested ELT pipeline.</div>
-            <div class="arch">
-              <span class="node hot">raw</span><span class="ar">→</span>
-              <span class="node">dbt staging</span><span class="ar">→</span>
-              <span class="node">dbt marts</span><span class="ar">→</span>
-              <span class="node hot">Metabase</span>
-              <span class="ar" style="margin-left:.4rem">· orchestrated by</span><span class="node">Dagster</span>
-            </div>
-            <p class="desc">A deterministic generator lands raw events in Postgres. dbt cleans and types them into staging, then computes business marts — daily active users, revenue by day, a user dimension. Dagster runs the DAG on a daily schedule; Metabase reads the marts. The whole thing materializes from empty with <code class="mono" style="color:var(--warehouse)">make&nbsp;run</code>.</p>
-            <div class="chips">
-              <span class="chip sig">PostgreSQL 16</span><span class="chip sig">dbt</span><span class="chip sig">Dagster</span>
-              <span class="chip">Metabase</span><span class="chip">Docker Compose</span><span class="chip">Python</span>
-            </div>
-            <div class="card-links">
-              <a class="lnk" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/tree/main/warehouselab" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.1.68-.22.68-.49v-1.7c-2.78.6-3.37-1.4-3.37-1.4-.45-1.17-1.11-1.48-1.11-1.48-.91-.64.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.36 9.36 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.78-4.57 5.04.36.32.68.94.68 1.9v2.81c0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg> Source</a>
-              <a class="lnk" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/blob/main/warehouselab/README.md" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h11l5 5v11H4z" stroke-linejoin="round"/><path d="M14 4v6h6M8 14h8M8 17h5" stroke-linecap="round"/></svg> README</a>
-            </div>
-          </div>
-          <div class="gates" data-gates>
-            <h4>Verification gates <span class="pass">4 / 4</span></h4>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext"><code>make run</code> goes empty → populated marts</span></div>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext"><code>dbt test</code> — all model tests pass</span></div>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext">golden-value: seeded DAU for a date equals expected</span></div>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext"><code>dbt docs generate</code> — lineage builds clean</span></div>
-          </div>
+    <!-- code specimen -->
+    <figure class="reveal" data-d="2">
+      <div class="specimen">
+        <div class="specimen-head">
+          <span>warehouselab — make run</span>
+          <span class="stamp-pass">✓ PASS</span>
         </div>
-      </article>
-
-      <!-- STREAMPULSE -->
-      <article class="card reveal" style="--hue:var(--stream)">
-        <div class="card-inner">
-          <div>
-            <div class="card-index">02 · REAL-TIME</div>
-            <h3>StreamPulse</h3>
-            <div class="tag">Process live events and compute real-time windowed metrics with alerting.</div>
-            <div class="arch">
-              <span class="node">producer</span><span class="ar">→</span>
-              <span class="node hot">Redpanda</span><span class="ar">→</span>
-              <span class="node">processor</span><span class="ar">→</span>
-              <span class="node hot">metrics</span><span class="ar">→</span>
-              <span class="node">dashboard</span><span class="ar">+</span><span class="node">alerter</span>
-            </div>
-            <p class="desc">A producer streams synthetic events into a Redpanda topic. A stream processor maintains tumbling windows — events per minute, conversion rate per 5-minute window — and writes them to a metrics store. A live dashboard renders them; an alerter fires when a metric crosses a threshold. The windowing logic is pure and unit-tested to exact aggregates.</p>
-            <div class="chips">
-              <span class="chip sig">Redpanda / Kafka</span><span class="chip sig">Stream processing</span><span class="chip sig">Windowed aggregation</span>
-              <span class="chip">PostgreSQL</span><span class="chip">Streamlit</span><span class="chip">Docker Compose</span>
-            </div>
-            <div class="card-links">
-              <a class="lnk" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/tree/main/streampulse" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.1.68-.22.68-.49v-1.7c-2.78.6-3.37-1.4-3.37-1.4-.45-1.17-1.11-1.48-1.11-1.48-.91-.64.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.36 9.36 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.78-4.57 5.04.36.32.68.94.68 1.9v2.81c0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg> Source</a>
-              <a class="lnk" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/blob/main/streampulse/README.md" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h11l5 5v11H4z" stroke-linejoin="round"/><path d="M14 4v6h6M8 14h8M8 17h5" stroke-linecap="round"/></svg> README</a>
-            </div>
-          </div>
-          <div class="gates" data-gates>
-            <h4>Verification gates <span class="pass">4 / 4</span></h4>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext">unit tests assert <em>exact</em> aggregates on a known batch</span></div>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext">integration run populates metrics within the window</span></div>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext">alert fires on a forced threshold breach</span></div>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext"><code>docker compose up</code> brings the pipeline up</span></div>
-          </div>
-        </div>
-      </article>
-
-      <!-- DATAGUARD -->
-      <article class="card reveal" style="--hue:var(--guard)">
-        <div class="card-inner">
-          <div>
-            <div class="card-index">03 · DATA QUALITY</div>
-            <h3>DataGuard</h3>
-            <div class="tag">Check datasets for schema, null, range, freshness &amp; drift; score and alert.</div>
-            <div class="arch">
-              <span class="node">expectations</span><span class="ar">→</span>
-              <span class="node hot">check engine</span><span class="ar">→</span>
-              <span class="node">scores</span><span class="ar">→</span>
-              <span class="node hot">FastAPI</span><span class="ar">→</span>
-              <span class="node">Streamlit</span>
-            </div>
-            <p class="desc">A pluggable engine runs checks — schema, null, range, freshness, and distribution drift — against Postgres tables on a schedule. Drift is detected with PSI (primary) and KS (secondary); results roll up into a deterministic per-table quality score. A FastAPI service serves the results; a Streamlit dashboard renders scores, failing checks, and trends. Every check is a pure, tested function.</p>
-            <div class="chips">
-              <span class="chip sig">PSI + KS drift</span><span class="chip sig">Pluggable checks</span><span class="chip sig">Quality scoring</span>
-              <span class="chip">FastAPI</span><span class="chip">Streamlit</span><span class="chip">PostgreSQL</span>
-            </div>
-            <div class="card-links">
-              <a class="lnk" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/tree/main/dataguard" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.1.68-.22.68-.49v-1.7c-2.78.6-3.37-1.4-3.37-1.4-.45-1.17-1.11-1.48-1.11-1.48-.91-.64.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.36 9.36 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.78-4.57 5.04.36.32.68.94.68 1.9v2.81c0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg> Source</a>
-              <a class="lnk" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/blob/main/dataguard/README.md" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h11l5 5v11H4z" stroke-linejoin="round"/><path d="M14 4v6h6M8 14h8M8 17h5" stroke-linecap="round"/></svg> README</a>
-            </div>
-          </div>
-          <div class="gates" data-gates>
-            <h4>Verification gates <span class="pass">4 / 4</span></h4>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext">each check type covered with pass + fail fixtures</span></div>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext">drift flags a shifted distribution, passes a stable one</span></div>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext">quality score is deterministic for fixed inputs</span></div>
-            <div class="gate"><span class="box"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gtext">dashboard renders against seeded results</span></div>
-          </div>
-        </div>
-      </article>
-
-    </div>
+        <div class="specimen-body" id="specimen"></div>
+      </div>
+      <figcaption class="specimen-cap">Fig. 1 — one command, empty to verified marts.</figcaption>
+    </figure>
   </div>
 </section>
 
-<!-- ===================== SHARED STACK ===================== -->
-<section id="stack">
-  <div class="wrap">
-    <span class="eyebrow reveal">Shared stack</span>
-    <h2 class="h-sec reveal" data-d="1">One spine, three workloads.</h2>
-    <p class="lead reveal" data-d="2">A Postgres-centered local stack keeps the projects coherent and the setup friction low. Heavy runtimes are containerized so a clean clone runs identically anywhere.</p>
-    <div class="stack-grid">
-      <div class="scard reveal" data-d="1"><div class="k">Storage</div><div class="v">PostgreSQL 16</div><ul><li>landing + marts</li><li>metrics store</li><li>quality results</li></ul></div>
-      <div class="scard reveal" data-d="2"><div class="k">Transform</div><div class="v">dbt + SQL</div><ul><li>staging models</li><li>tested marts</li><li>lineage docs</li></ul></div>
-      <div class="scard reveal" data-d="3"><div class="k">Move</div><div class="v">Dagster · Redpanda</div><ul><li>scheduled DAGs</li><li>Kafka streaming</li><li>windowed state</li></ul></div>
-      <div class="scard reveal" data-d="4"><div class="k">Serve</div><div class="v">FastAPI · Streamlit · Metabase</div><ul><li>quality API</li><li>live dashboards</li><li>BI on marts</li></ul></div>
-    </div>
+<!-- ===================== SYSTEMS ===================== -->
+<section id="systems" class="wrap">
+  <div class="sec-head reveal">
+    <h2>The Systems</h2>
+    <span class="sec-no">Features 01–03</span>
   </div>
-</section>
+  <p class="sec-intro reveal" data-d="1">Three modes of data engineering, three modes of failure tamed. Each feature lists its architecture, its stack, and the ledger of verification gates that gate “done.”</p>
 
-<!-- ===================== METHOD / LOOP ===================== -->
-<section id="loop">
-  <div class="wrap">
-    <span class="eyebrow reveal">How it's built</span>
-    <h2 class="h-sec reveal" data-d="1">The loop converges because the gates decide.</h2>
-    <p class="lead reveal" data-d="2">Tight v1 scope, a verification harness, and review/QA steps reading those gates. Build one project at a time; let the gates declare it done; then move on.</p>
-    <div class="loop">
-      <div class="step reveal" data-d="1"><div class="num">01</div><div class="nm">Scope</div><div class="ds">tight v1, explicit out-of-scope</div></div>
-      <div class="step reveal" data-d="1"><div class="num">02</div><div class="nm">Generate</div><div class="ds">deterministic seed data</div></div>
-      <div class="step reveal" data-d="2"><div class="num">03</div><div class="nm">Build</div><div class="ds">models · processors · checks</div></div>
-      <div class="step reveal" data-d="2"><div class="num">04</div><div class="nm">Test</div><div class="ds">unit + golden values</div></div>
-      <div class="step reveal" data-d="3"><div class="num">05</div><div class="nm">Run</div><div class="ds">one command, empty → done</div></div>
-      <div class="step reveal" data-d="3"><div class="num">06</div><div class="nm">Gates</div><div class="ds">green = ship</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== FOOTER ===================== -->
-<footer class="footer" id="contact">
-  <div class="wrap">
-    <div class="footer-grid">
+  <!-- 01 WAREHOUSELAB -->
+  <article class="feature reveal" style="--accent:var(--slate)">
+    <div class="fno">01<small>Batch ELT</small></div>
+    <div class="feature-body">
       <div>
-        <h3>Let's build reliable data systems.</h3>
-        <p class="muted">Anish Guntreddi · Data Engineering</p>
+        <h3>WarehouseLab</h3>
+        <p class="standfirst">Raw events to analytics-ready marts, via an orchestrated and tested ELT pipeline.</p>
+        <div class="arch">
+          <span class="n hot">raw</span><span class="ar">→</span>
+          <span class="n">dbt staging</span><span class="ar">→</span>
+          <span class="n">dbt marts</span><span class="ar">→</span>
+          <span class="n hot">Metabase</span>
+          <span class="ar">·</span><span class="n">Dagster DAG</span>
+        </div>
+        <p class="body">A deterministic generator lands raw events in Postgres. dbt cleans and types them into staging, then computes business marts — daily active users, revenue by day, a user dimension. Dagster runs the DAG on a daily schedule; the whole thing materializes from empty with <code>make&nbsp;run</code>.</p>
+        <div class="spec-line"><span class="k">Stack</span><span class="v">PostgreSQL 16 · dbt · Dagster · Metabase · Docker</span></div>
+        <div class="flinks">
+          <a class="flink" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/tree/main/warehouselab" target="_blank" rel="noopener">Source ↗</a>
+          <a class="flink" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/blob/main/warehouselab/README.md" target="_blank" rel="noopener">README ↗</a>
+        </div>
       </div>
-      <div class="footer-links">
-        <a class="lnk" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio" target="_blank" rel="noopener">GitHub</a>
-        <a class="lnk" href="mailto:anishguntreddi@gmail.com">Email</a>
-        <a class="lnk" href="#top">Back to top ↑</a>
+      <div class="ledger" data-gates>
+        <div class="ledger-head"><span>Verification ledger</span><span class="seal">4/4 verified</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext"><code>make run</code> goes empty → populated marts</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext"><code>dbt build</code> — 70/70 tests pass</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext">golden value: DAU = 57, revenue = 1175.29</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext"><code>dbt docs</code> — lineage builds clean</span></div>
       </div>
     </div>
-    <div class="foot-note">
-      <span>Built from a clean clone · gates decide done.</span>
-      <span>© 2026 Anish Guntreddi · MIT Licensed</span>
+  </article>
+
+  <!-- 02 STREAMPULSE -->
+  <article class="feature reveal" style="--accent:var(--terra)">
+    <div class="fno">02<small>Real-time</small></div>
+    <div class="feature-body">
+      <div>
+        <h3>StreamPulse</h3>
+        <p class="standfirst">Process live events and compute real-time windowed metrics, with alerting.</p>
+        <div class="arch">
+          <span class="n">producer</span><span class="ar">→</span>
+          <span class="n hot">Redpanda</span><span class="ar">→</span>
+          <span class="n">processor</span><span class="ar">→</span>
+          <span class="n hot">metrics</span><span class="ar">→</span>
+          <span class="n">alerter</span>
+        </div>
+        <p class="body">A producer streams synthetic events into a Redpanda topic. A processor maintains tumbling windows — events per minute, conversion rate per five-minute window — and writes them to a metrics store. A live dashboard renders them; an alerter fires on a threshold breach. The windowing logic is pure and unit-tested to <em>exact</em> aggregates.</p>
+        <div class="spec-line"><span class="k">Stack</span><span class="v">Redpanda · stream processor · PostgreSQL · Streamlit</span></div>
+        <div class="flinks">
+          <a class="flink" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/tree/main/streampulse" target="_blank" rel="noopener">Source ↗</a>
+          <a class="flink" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/blob/main/streampulse/README.md" target="_blank" rel="noopener">README ↗</a>
+        </div>
+      </div>
+      <div class="ledger" data-gates>
+        <div class="ledger-head"><span>Verification ledger</span><span class="seal">4/4 verified</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext">unit tests assert <em>exact</em> aggregates on a batch</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext">integration run populates metrics in-window</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext">alert fires on a forced breach (rows = 4)</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext"><code>docker compose up</code> brings the pipeline up</span></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 03 DATAGUARD -->
+  <article class="feature reveal" style="--accent:var(--pine)">
+    <div class="fno">03<small>Data quality</small></div>
+    <div class="feature-body">
+      <div>
+        <h3>DataGuard</h3>
+        <p class="standfirst">Check datasets for schema, null, range, freshness &amp; drift — then score and alert.</p>
+        <div class="arch">
+          <span class="n">expectations</span><span class="ar">→</span>
+          <span class="n hot">check engine</span><span class="ar">→</span>
+          <span class="n">scores</span><span class="ar">→</span>
+          <span class="n hot">FastAPI</span><span class="ar">→</span>
+          <span class="n">Streamlit</span>
+        </div>
+        <p class="body">A pluggable engine runs checks — schema, null, range, freshness, and distribution drift — against Postgres tables. Drift uses PSI (primary) and KS (secondary); results roll into a deterministic per-table quality score. A FastAPI service serves them; a Streamlit dashboard shows scores, failing checks, and trends. Every check is a pure, tested function.</p>
+        <div class="spec-line"><span class="k">Stack</span><span class="v">PSI/KS drift · FastAPI · Streamlit · PostgreSQL</span></div>
+        <div class="flinks">
+          <a class="flink" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/tree/main/dataguard" target="_blank" rel="noopener">Source ↗</a>
+          <a class="flink" href="https://github.com/Anish-Guntreddi/data-engineering-portfolio/blob/main/dataguard/README.md" target="_blank" rel="noopener">README ↗</a>
+        </div>
+      </div>
+      <div class="ledger" data-gates>
+        <div class="ledger-head"><span>Verification ledger</span><span class="seal">4/4 verified</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext">each check covered with pass + fail fixtures</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext">drift flags shifted (PSI 4.99), passes stable</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext">quality score deterministic for fixed inputs</span></div>
+        <div class="gate"><span class="mark"><svg viewBox="0 0 24 24"><path class="tick-path" d="M4 13l5 5L20 6"/></svg></span><span class="gtext">dashboard renders against seeded results</span></div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== PULL QUOTE ===================== -->
+<section class="pull wrap">
+  <blockquote>The gates are the definition of done — verified, not vibes.</blockquote>
+  <cite>— On building data systems that converge</cite>
+</section>
+
+<!-- ===================== STACK ===================== -->
+<section id="stack" class="wrap">
+  <div class="sec-head reveal">
+    <h2>Specifications</h2>
+    <span class="sec-no">The shared spine</span>
+  </div>
+  <p class="sec-intro reveal" data-d="1">A Postgres-centered local stack keeps the projects coherent and the setup friction low. Heavy runtimes are containerized, so a clean clone runs identically anywhere.</p>
+  <div class="specs reveal" data-d="2">
+    <div class="spec"><div class="k">Storage</div><div class="v">PostgreSQL 16</div><ul><li>landing + marts</li><li>metrics store</li><li>quality results</li></ul></div>
+    <div class="spec"><div class="k">Transform</div><div class="v">dbt + SQL</div><ul><li>staging models</li><li>tested marts</li><li>lineage docs</li></ul></div>
+    <div class="spec"><div class="k">Move</div><div class="v">Dagster · Redpanda</div><ul><li>scheduled DAGs</li><li>Kafka streaming</li><li>windowed state</li></ul></div>
+    <div class="spec"><div class="k">Serve</div><div class="v">FastAPI · Streamlit · Metabase</div><ul><li>quality API</li><li>live dashboards</li><li>BI on marts</li></ul></div>
+  </div>
+</section>
+
+<!-- ===================== METHOD ===================== -->
+<section id="method" class="wrap">
+  <div class="sec-head reveal">
+    <h2>The Method</h2>
+    <span class="sec-no">Why the loop converges</span>
+  </div>
+  <p class="sec-intro reveal" data-d="1">Tight v1 scope, a verification harness, and review steps that read the gates. Build one project at a time; let the gates declare it done; then move on.</p>
+  <div class="method reveal" data-d="2">
+    <div class="step"><div class="n">01</div><div class="t">Scope</div><div class="d">tight v1, explicit out-of-scope</div></div>
+    <div class="step"><div class="n">02</div><div class="t">Generate</div><div class="d">deterministic seed data</div></div>
+    <div class="step"><div class="n">03</div><div class="t">Build</div><div class="d">models · processors · checks</div></div>
+    <div class="step"><div class="n">04</div><div class="t">Test</div><div class="d">unit + golden values</div></div>
+    <div class="step"><div class="n">05</div><div class="t">Run</div><div class="d">one command, empty → done</div></div>
+    <div class="step"><div class="n">06</div><div class="t">Verify</div><div class="d">gates green = ship</div></div>
+  </div>
+</section>
+</main>
+
+<!-- ===================== COLOPHON ===================== -->
+<footer class="colophon" id="contact">
+  <div class="wrap">
+    <div class="colophon-grid">
+      <div>
+        <h3>Let’s build reliable data systems.</h3>
+        <p class="set">
+          <b>Set in</b> Fraunces &amp; Schibsted Grotesk.<br>
+          <b>Composed by</b> Anish Guntreddi — Data Engineering.<br>
+          <b>Printed</b> from a clean clone; the gates decided done.
+        </p>
+      </div>
+      <div class="colophon-links">
+        <a href="https://github.com/Anish-Guntreddi/data-engineering-portfolio" target="_blank" rel="noopener">GitHub repository ↗</a>
+        <a href="mailto:anishguntreddi@gmail.com">Send a note ↗</a>
+        <a href="#top">Back to the masthead ↑</a>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 Anish Guntreddi</span>
+      <span>MIT Licensed · Vol. 01</span>
     </div>
   </div>
 </footer>

@@ -1,155 +1,98 @@
 /* ============================================================================
-   Green Gates — interactions
-   - typewriter terminal that ends on a green PASS
-   - infinite pipeline marquee
-   - scroll-reveal via IntersectionObserver
-   - verification gates that stagger to green when a card enters view
+   GREEN GATES — editorial interactions
+   - code specimen renders with a gentle one-time stagger
+   - scroll reveal (IntersectionObserver) for .reveal and .draw
+   - verification ledgers: checkmarks draw in (stamp) when in view
    ========================================================================== */
 (function () {
   'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* ---------- 1. Terminal typewriter ---------- */
-  const term = document.getElementById('term');
-  const SCRIPT = [
-    { t: '$ make run', cls: 'pr', pause: 240 },
-    { t: '▸ docker compose up -d postgres', cls: 'mut' },
-    { t: '✔ postgres healthy on :5433', cls: 'ok' },
-    { t: '▸ python -m generator.load  (seed=42)', cls: 'cy' },
-    { t: '  raw.users    500 rows', cls: 'mut' },
-    { t: '  raw.events  18,742 rows', cls: 'mut' },
-    { t: '  raw.orders   4,310 rows', cls: 'mut' },
-    { t: '▸ dbt build --target prod', cls: 'cy' },
-    { t: '  staging ......... 3 models  OK', cls: 'mut' },
-    { t: '  marts ........... 3 models  OK', cls: 'mut' },
-    { t: '  tests ........... 14 passed', cls: 'ok' },
-    { t: '✔ assert_dau_golden  2024-01-08 → 211  PASS', cls: 'ok' },
-    { t: '', cls: 'mut' },
-    { t: 'ALL GATES GREEN — pipeline done.', cls: 'ok' },
+  /* ---------- 1. Code specimen ---------- */
+  var specimen = document.getElementById('specimen');
+  var LINES = [
+    { t: '$ make run',                              cls: 'pr' },
+    { t: '▸ seed raw.*        500 users · 5,691 events', cls: 'gr' },
+    { t: '▸ dbt build         70/70 data tests pass',         cls: 'gr' },
+    { t: '✓ assert_dau_golden 2024-01-11 → 57   PASS',   cls: 'ok' },
+    { t: '✓ assert_revenue    1175.29           PASS',        cls: 'ok' },
+    { t: '✓ marts populated · all gates verified',       cls: 'ok' }
   ];
-
-  function renderInstant() {
-    term.textContent = '';
-    SCRIPT.forEach(function (l) {
-      const div = document.createElement('div');
-      div.className = 't-line';
-      const span = document.createElement('span');
+  if (specimen) {
+    LINES.forEach(function (l, i) {
+      var div = document.createElement('div');
+      div.className = 'ln';
+      var span = document.createElement('span');
       span.className = l.cls;
-      span.textContent = l.t;               // textContent: no markup injection possible
+      span.textContent = l.t;          // textContent — no markup injection
       div.appendChild(span);
-      term.appendChild(div);
-    });
-  }
-
-  function typeLoop() {
-    let li = 0;
-    function nextLine() {
-      if (li >= SCRIPT.length) {
-        // hold, then restart for the looping "live" feel
-        setTimeout(function () { term.innerHTML = ''; li = 0; nextLine(); }, 4200);
-        return;
+      if (!reduce) {
+        div.style.opacity = '0';
+        div.style.transform = 'translateY(6px)';
+        div.style.transition = 'opacity .45s ease, transform .45s ease';
+        div.style.transitionDelay = (0.35 + i * 0.32) + 's';
       }
-      const line = SCRIPT[li];
-      const div = document.createElement('div');
-      div.className = 't-line';
-      const span = document.createElement('span');
-      span.className = line.cls;
-      div.appendChild(span);
-      const cur = document.createElement('span');
-      cur.className = 'cursor';
-      div.appendChild(cur);
-      term.appendChild(div);
-      // keep the panel scrolled to newest line
-      term.scrollTop = term.scrollHeight;
-
-      let ci = 0;
-      const text = line.t;
-      const speed = line.cls === 'pr' ? 42 : 12;
-      (function typeChar() {
-        if (ci <= text.length) {
-          span.textContent = text.slice(0, ci);
-          ci++;
-          setTimeout(typeChar, speed);
-        } else {
-          div.removeChild(cur);
-          li++;
-          setTimeout(nextLine, line.pause || 160);
-        }
-      })();
-    }
-    nextLine();
-  }
-
-  if (term) { reduce ? renderInstant() : typeLoop(); }
-
-  /* ---------- 2. Pipeline marquee ---------- */
-  const marq = document.getElementById('marq');
-  if (marq) {
-    const items = [
-      ['raw events', 'landing'], ['dbt staging', 'typed'], ['dbt marts', 'tested'],
-      ['Dagster DAG', 'scheduled'], ['Redpanda', 'streaming'], ['tumbling windows', 'exact'],
-      ['PSI / KS', 'drift'], ['quality score', 'deterministic'], ['golden values', 'asserted'],
-      ['docker compose', 'one command'],
-    ];
-    const appendSet = function () {
-      items.forEach(function (p) {
-        const span = document.createElement('span');
-        span.appendChild(document.createTextNode(p[0] + ' '));
-        const b = document.createElement('b');
-        b.textContent = p[1];
-        span.appendChild(b);
-        span.appendChild(document.createTextNode(' ·'));
-        marq.appendChild(span);
+      specimen.appendChild(div);
+    });
+    if (!reduce) {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          specimen.querySelectorAll('.ln').forEach(function (d) {
+            d.style.opacity = '1';
+            d.style.transform = 'none';
+          });
+        });
       });
-    };
-    appendSet(); appendSet(); // doubled for seamless -50% loop
+    }
   }
 
-  /* ---------- 3. Scroll reveal ---------- */
-  const reveals = document.querySelectorAll('.reveal');
+  /* ---------- 2. Scroll reveal (.reveal + .draw) ---------- */
+  var animated = document.querySelectorAll('.reveal, .draw');
   if (reduce || !('IntersectionObserver' in window)) {
-    reveals.forEach(function (el) { el.classList.add('in'); });
+    animated.forEach(function (el) { el.classList.add('in'); });
   } else {
-    const io = new IntersectionObserver(function (entries) {
+    var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-    reveals.forEach(function (el) { io.observe(el); });
+    }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+    animated.forEach(function (el) { io.observe(el); });
   }
 
-  /* ---------- 4. Gate panels stagger to green ---------- */
-  const panels = document.querySelectorAll('[data-gates]');
+  /* ---------- 3. Verification ledgers stamp in ---------- */
+  var ledgers = document.querySelectorAll('[data-gates]');
+  function stamp(ledger) {
+    var gates = ledger.querySelectorAll('.gate');
+    gates.forEach(function (g, i) {
+      setTimeout(function () { g.classList.add('checked'); }, 220 + i * 260);
+    });
+  }
   if (reduce || !('IntersectionObserver' in window)) {
-    panels.forEach(function (p) { p.querySelectorAll('.gate').forEach(function (g) { g.classList.add('green'); }); });
+    ledgers.forEach(function (l) { l.querySelectorAll('.gate').forEach(function (g) { g.classList.add('checked'); }); });
   } else {
-    const gio = new IntersectionObserver(function (entries) {
+    var gio = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
-        const gates = e.target.querySelectorAll('.gate');
-        gates.forEach(function (g, i) {
-          setTimeout(function () { g.classList.add('green'); }, 260 + i * 260);
-        });
+        stamp(e.target);
         gio.unobserve(e.target);
       });
-    }, { threshold: 0.4 });
-    panels.forEach(function (p) { gio.observe(p); });
+    }, { threshold: 0.45 });
+    ledgers.forEach(function (l) { gio.observe(l); });
   }
 
-  /* ---------- 5. Active nav link on scroll ---------- */
-  const navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a[href^="#"]'));
-  const sections = navLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
-  if (sections.length && 'IntersectionObserver' in window) {
-    const sio = new IntersectionObserver(function (entries) {
+  /* ---------- 4. Active nav link ---------- */
+  var links = Array.prototype.slice.call(document.querySelectorAll('.topnav nav a[href^="#"]'));
+  var secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  if (secs.length && 'IntersectionObserver' in window) {
+    var nio = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
-          navLinks.forEach(function (a) {
-            a.style.color = a.getAttribute('href') === '#' + e.target.id ? 'var(--text)' : '';
+          links.forEach(function (a) {
+            a.style.color = a.getAttribute('href') === '#' + e.target.id ? 'var(--pine)' : '';
           });
         }
       });
     }, { threshold: 0.5 });
-    sections.forEach(function (s) { sio.observe(s); });
+    secs.forEach(function (s) { nio.observe(s); });
   }
 })();

@@ -1,0 +1,94 @@
+name: dataguard
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: dataguard-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-dataguard}
+    ports:
+      - "${DATAGUARD_PG_PORT:-5434}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-dataguard}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    volumes:
+      - dataguard_pgdata:/var/lib/postgresql/data
+
+  # One-shot service: ensures schema, seeds demo tables, runs all checks, then
+  # exits. `make demo` runs this to completion, leaving api + dashboard up.
+  runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dataguard-app:latest
+    container_name: dataguard-runner
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATAGUARD_PG_HOST: postgres
+      DATAGUARD_PG_PORT: 5432
+      DATAGUARD_PG_DB: ${POSTGRES_DB:-dataguard}
+      DATAGUARD_PG_USER: ${POSTGRES_USER:-postgres}
+      DATAGUARD_PG_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    command: >
+      sh -c "python -m dataguard.seed.seed && python -m dataguard.runner"
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dataguard-app:latest
+    container_name: dataguard-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATAGUARD_PG_HOST: postgres
+      DATAGUARD_PG_PORT: 5432
+      DATAGUARD_PG_DB: ${POSTGRES_DB:-dataguard}
+      DATAGUARD_PG_USER: ${POSTGRES_USER:-postgres}
+      DATAGUARD_PG_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    command: >
+      uvicorn dataguard.api.main:app --host 0.0.0.0 --port 8201
+    ports:
+      - "${DATAGUARD_API_PORT:-8201}:8201"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8201/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dataguard-app:latest
+    container_name: dataguard-dashboard
+    depends_on:
+      api:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    environment:
+      DATAGUARD_PG_HOST: postgres
+      DATAGUARD_PG_PORT: 5432
+      DATAGUARD_PG_DB: ${POSTGRES_DB:-dataguard}
+      DATAGUARD_PG_USER: ${POSTGRES_USER:-postgres}
+      DATAGUARD_PG_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DATAGUARD_API_URL: http://api:8201
+    command: >
+      streamlit run dataguard/dashboard/app.py
+      --server.port 8501 --server.address 0.0.0.0 --server.headless true
+    ports:
+      - "${DATAGUARD_DASHBOARD_PORT:-8501}:8501"
+
+volumes:
+  dataguard_pgdata:

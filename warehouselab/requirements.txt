@@ -1,0 +1,19 @@
+# Container runtime requirements for the WarehouseLab pipeline & Dagster services.
+# These are installed inside python:3.11-slim images (NOT on the host).
+# The host .venv only needs: pytest numpy pandas pyyaml (see README "make test").
+
+# --- data generation (pure logic deps; also used by the container loader) ---
+numpy==1.26.4
+pandas==2.2.2
+
+# --- Postgres driver for the generator loader ---
+psycopg2-binary==2.9.9
+
+# --- dbt ---
+dbt-core==1.8.7
+dbt-postgres==1.8.2
+
+# --- orchestration ---
+dagster==1.8.12
+dagster-webserver==1.8.12
+dagster-dbt==0.24.12

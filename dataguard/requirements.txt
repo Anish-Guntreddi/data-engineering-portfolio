@@ -1,0 +1,14 @@
+# Full runtime requirements for the CONTAINERIZED services (api / dashboard /
+# runner). These run inside python:3.11-slim images — never on the host.
+#
+# Host-only unit tests use a separate, minimal set (see requirements-test.txt):
+# pytest, numpy, pandas, pyyaml — which install fine on Python 3.14.
+
+numpy==2.1.3
+pandas==2.2.3
+pyyaml==6.0.2
+psycopg2-binary==2.9.10
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+streamlit==1.40.2
+requests==2.32.3

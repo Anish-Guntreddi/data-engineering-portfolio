@@ -1,0 +1,8 @@
+# HOST-ONLY unit-test dependencies. These install cleanly on Python 3.14 and
+# are the ONLY packages the project-local .venv needs. The pure check / drift /
+# scoring logic imports nothing beyond numpy + pandas (+ pyyaml for config),
+# so the full suite runs without Docker.
+pytest==8.3.4
+numpy>=2.0
+pandas>=2.2
+pyyaml>=6.0

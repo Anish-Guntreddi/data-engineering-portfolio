@@ -1,0 +1,19 @@
+# dbt profile for WarehouseLab.
+# All connection values come from env vars so the same profile works inside the
+# pipeline container (host=postgres, port=5432) and could be pointed elsewhere.
+# DBT_PG_* are set by docker-compose / the Makefile.
+warehouselab:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DBT_PG_HOST', 'postgres') }}"
+      port: "{{ env_var('DBT_PG_PORT', '5432') | int }}"
+      user: "{{ env_var('DBT_PG_USER', 'postgres') }}"
+      password: "{{ env_var('DBT_PG_PASSWORD', 'postgres') }}"
+      dbname: "{{ env_var('DBT_PG_DATABASE', 'warehouse') }}"
+      schema: "public"
+      threads: 4
+      keepalives_idle: 0
+      connect_timeout: 10
+      sslmode: disable

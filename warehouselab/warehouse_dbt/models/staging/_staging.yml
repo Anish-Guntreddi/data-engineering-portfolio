@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: stg_users
+    description: "Typed/cleaned users."
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+          - unique
+      - name: signup_date
+        tests:
+          - not_null
+      - name: country
+        tests:
+          - not_null
+      - name: plan
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["free", "pro", "enterprise"]
+
+  - name: stg_events
+    description: "Typed/cleaned events with derived event_date."
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: user_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_users')
+              field: user_id
+      - name: event_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["page_view", "click", "signup", "purchase"]
+      - name: event_ts
+        tests:
+          - not_null
+      - name: event_date
+        tests:
+          - not_null
+      - name: session_id
+        tests:
+          - not_null
+
+  - name: stg_orders
+    description: "Typed/cleaned orders with derived order_date."
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+      - name: user_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_users')
+              field: user_id
+      - name: amount
+        tests:
+          - not_null
+      - name: order_ts
+        tests:
+          - not_null
+      - name: order_date
+        tests:
+          - not_null
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["placed", "completed", "refunded"]

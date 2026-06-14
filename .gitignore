@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+**/target/
+**/dbt_packages/
+**/logs/
+.user.yml
+
+# Dagster
+.dagster/
+dagster_home/storage/
+dagster_home/history/
+*.tmp
+
+# Env / secrets
+.env
+*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+
+# Node (portfolio site tooling, if any)
+node_modules/
+
+# Data artifacts
+*.duckdb
+*.sqlite
+data/*.csv
+!data/.gitkeep
+
+# Local preview / screenshot tooling (not part of the deliverable)
+.preview/
+.playwright-mcp/
+/hero.png
+/page-*.png

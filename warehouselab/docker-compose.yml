@@ -1,0 +1,146 @@
+# WarehouseLab local stack.
+#   postgres            : warehouse DB (host port 5433)
+#   pipeline            : one-shot seed + dbt build + dbt test (default profile)
+#   dagster-webserver   : Dagster UI on 3333          (profile: orchestration)
+#   dagster-daemon      : schedules/sensors            (profile: orchestration)
+#   metabase            : BI dashboard on 3030         (profile: dashboard)
+#
+# Bring up just postgres:        docker compose up -d postgres
+# Run the pipeline once:         docker compose run --rm pipeline
+# Orchestration UI:              docker compose --profile orchestration up
+# Dashboard:                     docker compose --profile dashboard up -d metabase
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: warehouselab-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-warehouse}
+    ports:
+      - "${HOST_PG_PORT:-5433}:5432"
+    volumes:
+      - warehouselab_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-warehouse}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: warehouselab-pipeline:latest
+    container_name: warehouselab-pipeline
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # generator loader (libpq vars) — internal port is always 5432
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: ${POSTGRES_USER:-postgres}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATABASE: ${POSTGRES_DB:-warehouse}
+      # dbt connection (resolved by profiles.yml env_var)
+      DBT_PG_HOST: postgres
+      DBT_PG_PORT: 5432
+      DBT_PG_USER: ${POSTGRES_USER:-postgres}
+      DBT_PG_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DBT_PG_DATABASE: ${POSTGRES_DB:-warehouse}
+      DBT_PROFILES_DIR: /app/warehouse_dbt
+      DBT_PROJECT_DIR: /app/warehouse_dbt
+    command: ["bash", "/app/scripts/run_pipeline.sh"]
+    restart: "no"
+
+  dagster-webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: warehouselab-pipeline:latest
+    container_name: warehouselab-dagster-webserver
+    profiles: ["orchestration"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: ${POSTGRES_USER:-postgres}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATABASE: ${POSTGRES_DB:-warehouse}
+      DBT_PG_HOST: postgres
+      DBT_PG_PORT: 5432
+      DBT_PG_USER: ${POSTGRES_USER:-postgres}
+      DBT_PG_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DBT_PG_DATABASE: ${POSTGRES_DB:-warehouse}
+      DBT_PROFILES_DIR: /app/warehouse_dbt
+      DBT_PROJECT_DIR: /app/warehouse_dbt
+      DAGSTER_HOME: /app/dagster_home
+    command:
+      - dagster-webserver
+      - -h
+      - "0.0.0.0"
+      - -p
+      - "3333"
+      - -m
+      - orchestration.definitions
+    ports:
+      - "${HOST_DAGSTER_PORT:-3333}:3333"
+    restart: unless-stopped
+
+  dagster-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: warehouselab-pipeline:latest
+    container_name: warehouselab-dagster-daemon
+    profiles: ["orchestration"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: ${POSTGRES_USER:-postgres}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATABASE: ${POSTGRES_DB:-warehouse}
+      DBT_PG_HOST: postgres
+      DBT_PG_PORT: 5432
+      DBT_PG_USER: ${POSTGRES_USER:-postgres}
+      DBT_PG_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DBT_PG_DATABASE: ${POSTGRES_DB:-warehouse}
+      DBT_PROFILES_DIR: /app/warehouse_dbt
+      DBT_PROJECT_DIR: /app/warehouse_dbt
+      DAGSTER_HOME: /app/dagster_home
+    command:
+      - dagster-daemon
+      - run
+      - -m
+      - orchestration.definitions
+    restart: unless-stopped
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: warehouselab-metabase
+    profiles: ["dashboard"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ${POSTGRES_DB:-warehouse}
+      MB_DB_PORT: 5432
+      MB_DB_USER: ${POSTGRES_USER:-postgres}
+      MB_DB_PASS: ${POSTGRES_PASSWORD:-postgres}
+      MB_DB_HOST: postgres
+    ports:
+      - "${HOST_METABASE_PORT:-3030}:3000"
+    restart: unless-stopped
+
+volumes:
+  warehouselab_pgdata:
+    name: warehouselab_pgdata

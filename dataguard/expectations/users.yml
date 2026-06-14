@@ -1,0 +1,50 @@
+# Second expectation slot (file name kept per the monorepo's project layout).
+# It targets the DRIFTED demo table, which has injected nulls, out-of-range
+# values, a shifted distribution and stale timestamps — so several of these
+# checks are EXPECTED TO FAIL, demonstrating the failing path in the dashboard.
+# The drift baseline points at orders_clean so the shift is detectable.
+table: orders_drifted
+timestamp_column: created_at
+
+schema:
+  id: int
+  amount: float
+  quantity: int
+  status: string
+  created_at: datetime
+
+checks:
+  - type: schema_check
+    severity: critical
+
+  - type: null_check
+    column: amount
+    threshold: 0.0
+    severity: warning
+
+  - type: range_check
+    column: amount
+    min: 0
+    max: 10000
+    threshold: 1.0
+    severity: warning
+
+  - type: range_check
+    column: quantity
+    min: 1
+    max: 10
+    threshold: 1.0
+    severity: info
+
+  - type: freshness_check
+    column: created_at
+    max_age_hours: 48
+    severity: warning
+
+  - type: drift_check
+    column: amount
+    baseline_table: orders_clean
+    baseline_column: amount
+    bins: 10
+    threshold: 0.2
+    severity: warning

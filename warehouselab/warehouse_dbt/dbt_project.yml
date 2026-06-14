@@ -1,0 +1,33 @@
+name: "warehouselab"
+version: "1.0.0"
+config-version: 2
+
+profile: "warehouselab"
+
+model-paths: ["models"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Golden constants baked from a real run of generator.generate on the host.
+# Singular tests read these via {{ var(...) }} so the source of truth is shared.
+vars:
+  golden_date: "2024-01-11"
+  golden_dau: 57
+  golden_revenue: 1175.29
+  golden_n_orders: 35
+
+models:
+  warehouselab:
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      +materialized: table
+      +schema: marts

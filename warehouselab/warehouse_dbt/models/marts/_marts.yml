@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: fct_daily_active_users
+    description: "Distinct active users per calendar day."
+    columns:
+      - name: date
+        description: "Calendar day."
+        tests:
+          - not_null
+          - unique
+      - name: dau
+        description: "Distinct active users on that day."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: true
+
+  - name: fct_revenue_by_day
+    description: "Completed-order revenue per calendar day."
+    columns:
+      - name: date
+        description: "Calendar day."
+        tests:
+          - not_null
+          - unique
+      - name: revenue
+        description: "Sum of completed order amounts."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: true
+      - name: n_orders
+        description: "Count of completed orders."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: true
+
+  - name: dim_users
+    description: "User dimension with activity & revenue rollups."
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('stg_users')
+              field: user_id
+      - name: plan
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["free", "pro", "enterprise"]
+      - name: n_events
+        tests:
+          - not_null
+      - name: n_completed_orders
+        tests:
+          - not_null
+      - name: lifetime_revenue
+        tests:
+          - not_null

@@ -1,0 +1,7 @@
+# HOST-only dev/test dependencies (installed into the project-local .venv).
+# Pure core logic unit-tests on the host with just these. Do NOT add
+# confluent-kafka / psycopg2 / streamlit here — those are containerized.
+pytest==8.3.3
+numpy==2.1.2
+pandas==2.2.3
+pyyaml==6.0.2

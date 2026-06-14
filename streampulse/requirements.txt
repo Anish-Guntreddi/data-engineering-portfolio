@@ -1,0 +1,6 @@
+# Runtime dependencies for the containerized StreamPulse services.
+# These are installed inside the python:3.11-slim image (NOT on the host).
+confluent-kafka==2.5.3
+psycopg2-binary==2.9.9
+streamlit==1.39.0
+pandas==2.2.3

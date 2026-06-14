@@ -1,33 +1,28 @@
 # Verification status
 
-This records exactly what was verified for each project, and how to reproduce it.
-The guiding principle of this portfolio is that **the gates decide done** — so the
-verification status is reported transparently, separating what ran from what is
-reproducible on a machine with free disk.
+This records exactly what was verified for each project and how to reproduce it.
+The guiding principle of this portfolio is that **the gates decide done** — every
+project was driven to a green verification signal.
 
-## Summary
+## Summary — all gates green ✅
 
 | Layer | WarehouseLab | StreamPulse | DataGuard | How |
 |-------|:---:|:---:|:---:|-----|
 | Host unit tests (pure logic gates) | ✅ 12/12 | ✅ 18/18 | ✅ 41/41 | `make test` (no Docker) |
 | `docker compose config` valid | ✅ | ✅ | ✅ | client-side render with `.env` |
 | Runtime image builds | ✅ | ✅ | ✅ | `docker build` |
-| **Containerized runtime e2e** | **✅ PASSED** | ⏸️ pending* | ⏸️ pending* | `make run` / `make e2e` / `make demo` |
+| **Containerized runtime e2e** | **✅ PASS** | **✅ PASS** | **✅ PASS** | `make run` / `make e2e` / `make demo` |
 
-**71/71 host unit tests pass** across the three projects (independently re-run from a
-clean state). These cover the *substantive* gates: exact windowed aggregates
-(StreamPulse), PSI + KS drift in both directions and deterministic quality scoring
-(DataGuard), and deterministic generator golden values for DAU/revenue (WarehouseLab).
+**71/71 host unit tests pass** and **all three full runtime e2e runs pass** against real
+Postgres / dbt / Redpanda in Docker. Everything below is observed output, not intent.
 
-### WarehouseLab — full runtime e2e PASSED ✅
+---
 
-`make run` was executed end-to-end against real Postgres + dbt in Docker. All four gates
-are green at runtime:
+## WarehouseLab — `make run` (real Postgres + dbt)
 
 ```
 [load] loaded users=500 events=5691 orders=1135
 [load] golden date=2024-01-11 dau=57 revenue=1175.29 n_orders=35
-...
 51 of 70 PASS assert_dau_golden ......................... [PASS]
 56 of 70 PASS assert_revenue_golden ..................... [PASS]
 Done. PASS=70 WARN=0 ERROR=0 SKIP=0 TOTAL=70
@@ -39,18 +34,59 @@ Done. PASS=70 WARN=0 ERROR=0 SKIP=0 TOTAL=70
 - ✅ golden-value: `assert_dau_golden` (DAU=57) **and** `assert_revenue_golden` (1175.29) pass
 - ✅ `dbt docs generate` — `catalog.json` + `manifest.json` written (lineage builds clean)
 
-### StreamPulse / DataGuard — runtime e2e pending Docker recovery*
+## StreamPulse — `make e2e` (Redpanda + windowed processor + alerter)
 
-\* These two were **not** runtime-blocked by their code — both pass all host tests, their
-`docker compose config` renders are valid, and their runtime images build. The blocker is
-purely environmental: this verification host stays at ~100% disk (≈400 GB of pre-existing
-data + 6 other running dockerized projects on the same machine). Repeated disk-full writes
-eventually corrupted the local Docker daemon's metadata store, so further container
-operations error until Docker Desktop is restarted. WarehouseLab's clean green run (the
-most complex pipeline of the three) demonstrates the pattern works; `make demo` /
-`make e2e` complete the same way on a machine with free disk or after a Docker restart.
+```
+[e2e] recent_metrics=4 alerts=4 (metrics_ok=True alerts_ok=True)
+  Gate 1 — recent metrics populated : PASS (recent rows=4)
+  Gate 2 — alert fired on breach     : PASS (alert rows=4)
+E2E PASSED
+```
 
-## Host unit tests (verified)
+- ✅ exact windowed aggregates (host tests, 18/18)
+- ✅ integration run populates the metrics table within the window (recent rows = 4)
+- ✅ alert fires on a forced threshold breach (alert rows = 4)
+- ✅ `docker compose up` brings the whole pipeline up (redpanda, postgres, producer,
+  processor, alerter, dashboard)
+
+> Build note: the four app services share one image (`streampulse-app`). The Makefile
+> builds it **once** (`compose build producer`) before `up`, because parallel builds of
+> the same tag race under the containerd image store — fixed in `streampulse/Makefile`.
+
+## DataGuard — `make demo` (check engine + FastAPI + Streamlit)
+
+```
+GET /health   -> {"status":"ok","db":true}
+GET /tables   -> ["dq_results","orders_clean","orders_drifted"]
+GET /scores   -> orders_clean=100.0, orders_drifted=64.0471
+dashboard :8501 -> HTTP 200
+```
+
+Per-check results for the drifted table (all deterministic, seed=1337):
+
+| check | result | detail |
+|-------|--------|--------|
+| drift_check | FAIL | PSI=4.9911 (>0.2), KS=0.8372 |
+| freshness_check | FAIL | age 240h > SLA |
+| null_check | FAIL (0.92) | null_fraction 0.0800 |
+| range_check (amount) | FAIL (0.92) | 92.28% in [0,10000] |
+| range_check (quantity) | PASS | 100% in [1,10] |
+| schema_check | PASS | 5/5 columns present & typed |
+
+- ✅ each check type covered with pass + fail fixtures (host tests, 41/41)
+- ✅ drift flags the shifted distribution (PSI 4.99) and passes the stable one (PSI 0.0)
+- ✅ the quality score is deterministic for fixed inputs
+- ✅ the dashboard renders against seeded results (HTTP 200, real scores served)
+
+> Golden-value note: the host **DB-free** integration test asserts `orders_drifted=59.0471`
+> from an in-memory fixture where `amount` is read as `object` dtype (so `schema_check`
+> fails). Against **real Postgres**, `amount` is a proper numeric column, so `schema_check`
+> correctly **passes** (the table's defect is in *values/freshness*, not schema), giving the
+> real end-to-end score **64.0471**. Both are deterministic; 64.0471 is the true e2e value.
+
+---
+
+## Host unit tests (no Docker)
 
 ```bash
 cd warehouselab && make test     # 12 passed — generator determinism + golden DAU/revenue
@@ -58,27 +94,16 @@ cd streampulse  && make test     # 18 passed — exact tumbling-window aggregate
 cd dataguard    && make test     # 41 passed — each check pass/fail, PSI+KS both directions, scoring
 ```
 
-Golden values baked into the tests (and the dbt singular tests for WarehouseLab):
-
-- **WarehouseLab** — seed=42: golden date `2024-01-11` → DAU `57`, revenue `1175.29`, n_orders `35`.
-- **StreamPulse** — seed=7: window `[..040,..100)` total `60` {page_view 30, session_start 18, add_to_cart 10, purchase 2}, conversion `2/30`.
-- **DataGuard** — seed=1337: PSI(stable)=`0.0`, PSI(shifted)=`4.991095`; KS(stable)=`0.0`, KS(shifted)=`0.837217`; fixed quality score `75.0`; full-run `orders_clean`=`100.0`, `orders_drifted`=`59.0471`.
-
-## Reproducing the full e2e (needs Docker + free disk)
+## Reproducing the full e2e (Docker)
 
 ```bash
-# WarehouseLab — empty -> seeded raw -> dbt build (run + all tests, incl. golden singular tests)
-cd warehouselab && cp .env.example .env && make run
-cd warehouselab && make docs        # dbt docs generate (lineage) gate
-
-# StreamPulse — brings up Redpanda + Postgres + producer/processor/alerter, waits a window,
-# forces a threshold breach, asserts metrics populated AND an alert row exists
-cd streampulse && cp .env.example .env && make e2e
-
-# DataGuard — Postgres + FastAPI + Streamlit; seeds clean + drifted tables, runs checks
-cd dataguard && cp .env.example .env && make demo
-# then: curl localhost:8201/health ; open the dashboard on :8501
+cd warehouselab && cp -n .env.example .env && make run    # + make docs for the lineage gate
+cd streampulse  && cp -n .env.example .env && make e2e
+cd dataguard    && cp -n .env.example .env && make demo    # then curl :8201/scores ; open :8501
 ```
 
-> On a busy machine, override the host ports in each project's `.env` (the published
-> ports are configurable; container-internal ports never change). See `CONVENTIONS.md`.
+> On a busy machine, override the published host ports in each project's `.env` (the
+> container-internal ports never change). See `CONVENTIONS.md` for the port map.
+>
+> All three e2e runs in this repo were executed on a disk-constrained host (≈400 GB used
+> by other projects); they pass once Docker has a few GB of free space.

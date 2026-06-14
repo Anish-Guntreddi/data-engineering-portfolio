@@ -37,13 +37,16 @@ test: venv
 	$(PY) -m pytest tests/ -q
 
 # ---- Containerized stack ----
+# producer/processor/alerter/dashboard all share one image (streampulse-app).
+# Build it ONCE via a single service, otherwise parallel builds race on the
+# shared tag ("image already exists") under the containerd image store.
 .PHONY: build
 build:
-	$(COMPOSE) build
+	$(COMPOSE) build producer
 
 .PHONY: up
-up:
-	$(COMPOSE) up -d --build
+up: build
+	$(COMPOSE) up -d
 	@echo "StreamPulse is up."
 	@echo "  Dashboard : http://localhost:$${DASHBOARD_PORT:-8502}"
 	@echo "  Console   : http://localhost:$${REDPANDA_CONSOLE_PORT:-8090}"
